@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - Light Switch in CSS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+  
+  <script>
+  
+  function sendMessageRest(message){
+      var xhttp = new XMLHttpRequest();
+      xhttp.open("POST", "/process", true);
+      xhttp.setRequestHeader("Content-type", "text/plain");
+      xhttp.send(message);
+ }
+  
+  </script>
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<input type="checkbox" id="light-switch"/>
+<label for="light-switch" id="light-switch-label">
+  <div class="screw"></div>
+  <div class="switch" onclick="sendMessageRest(document.getElementById('light-switch').checked);"></div>
+  <div class="screw"></div>
+</label>
+<div id="background"></div>
+<!-- partial -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+
+</body>
+</html>
