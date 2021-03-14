@@ -4,15 +4,26 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.example</groupId>
-	<artifactId>igor</artifactId>
-	<version>1.0-SNAPSHOT</version>
-
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.0.0.RELEASE</version>
+		<version>2.4.3</version>
 	</parent>
+
+	<groupId>com.example</groupId>
+	<artifactId>igor</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+
+	<properties>
+		<java.version>1.8</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<spring-native.version>0.9.0</spring-native.version>
+		<main.class>com.example.igor.Application</main.class>
+		<docker.image.name>${project.artifactId}</docker.image.name>
+		<docker.image.from>ghcr.io/graalvm/graalvm-ce:latest:ol8-java11-21.0.0</docker.image.from>
+		<docker.env.JAVA_OPTS>-Xmx512m -Dfile.encoding=UTF-8 -XX:+UseG1GC -verbose:gc -XX:+PrintGCDetails -Xloggc:/var/log/gc.log -Djava.security.egd=file:/dev/./urandom</docker.env.JAVA_OPTS>
+	</properties>
 
 	<dependencies>
 		<dependency>
@@ -43,19 +54,84 @@
 		</dependency>
 	</dependencies>
 
-	<properties>
-		<java.version>1.8</java.version>
-	</properties>
-
-
+	<!-- Check out the parent POM for the plugins configuration -->
 	<build>
 		<plugins>
+			<!-- Used for build aarch64 -->
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>0.34.1</version>
+				<configuration combine.self="override">
+					<verbose>true</verbose>
+					<images>
+						<image>
+							<name>${docker.image.name}</name>
+							<build>
+								<from>${docker.image.from}</from>
+								<tags>
+									<tag>latest</tag>
+									<tag>${project.version}</tag>
+								</tags>
+								<assembly>
+									<descriptorRef>artifact</descriptorRef>
+								</assembly>
+								<env>
+									<JAVA_CMD>java ${docker.env.JAVA_OPTS} -jar maven/${project.artifactId}-${project.version}.jar</JAVA_CMD>
+								</env>
+								<cmd>java ${docker.env.JAVA_OPTS} -jar maven/${project.artifactId}-${project.version}.jar</cmd>
+							</build>
+						</image>
+					</images>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<image>
+						<builder>paketobuildpacks/builder:tiny</builder>
+						<env>
+							<BP_NATIVE_IMAGE>true</BP_NATIVE_IMAGE>
+						</env>
+					</image>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.springframework.experimental</groupId>
+				<artifactId>spring-aot-maven-plugin</artifactId>
+				<version>${spring-native.version}</version>
+				<executions>
+					<execution>
+						<id>test-generate</id>
+						<goals>
+							<goal>test-generate</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>generate</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
 
+	<repositories>
+		<repository>
+			<id>spring-releases</id>
+			<name>Spring Releases</name>
+			<url>https://repo.spring.io/release</url>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>spring-releases</id>
+			<name>Spring Releases</name>
+			<url>https://repo.spring.io/release</url>
+		</pluginRepository>
+	</pluginRepositories>
 
 </project>
