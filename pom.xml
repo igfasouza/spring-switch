@@ -21,7 +21,7 @@
 		<spring-native.version>0.9.0</spring-native.version>
 		<main.class>com.example.igor.Application</main.class>
 		<docker.image.name>${project.artifactId}</docker.image.name>
-		<docker.image.from>ghcr.io/graalvm/graalvm-ce:latest:ol8-java11-21.0.0</docker.image.from>
+		<docker.image.from>ghcr.io/graalvm/graalvm-ce:ol8-java11-21.0.0.2</docker.image.from>
 		<docker.env.JAVA_OPTS>-Xmx512m -Dfile.encoding=UTF-8 -XX:+UseG1GC -verbose:gc -XX:+PrintGCDetails -Xloggc:/var/log/gc.log -Djava.security.egd=file:/dev/./urandom</docker.env.JAVA_OPTS>
 	</properties>
 

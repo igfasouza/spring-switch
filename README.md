@@ -37,3 +37,10 @@ mvn clean install -DskipTests docker:build
 
 PS: `GraalVM AARCH64` is under development more details look at [GraalVM Documentation](https://www.graalvm.org/docs/introduction/)
 
+
+# rum
+
+```
+docker run -it igor:0.0.1-SNAPSHOT
+```
+
