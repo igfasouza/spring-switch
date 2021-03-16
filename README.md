@@ -44,3 +44,7 @@ PS: `GraalVM AARCH64` is under development more details look at [GraalVM Documen
 docker run -it igor:0.0.1-SNAPSHOT
 ```
 
+
+![Demo](pictures/01.jpg)
+
+- [Blog post](http://www.igfasouza.com/blog/energy-switch-and-smart-home-with-kafka/)
